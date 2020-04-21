@@ -63,6 +63,10 @@ public class UrlServiceImpl implements UrlService {
 
     @Override
     public void loadId() {
-        urlConverter.setAutoIncrId(NumberConverter.toBase10(urlDao.selectMax()));
+        String encoded = urlDao.selectMax();
+        if (encoded == null || encoded.isEmpty()) {
+            return;
+        }
+        urlConverter.setAutoIncrId(NumberConverter.toBase10(encoded));
     }
 }

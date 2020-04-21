@@ -13,16 +13,5 @@ class JumperApplicationTests {
 
     @Resource
     private UrlDao urlDao;
-    
-    @Test
-    void contextLoads() {
-        UrlModel model = new UrlModel();
-        model.setUrl("123123123123");
-        model.setEncoded("sadas");
-        model.setHasPassword(true);
-        model.setPassword("asdad");
-
-        urlDao.insertUrl(model);
-    }
 
 }

@@ -1,5 +1,6 @@
 # Jumper
 一个简单的短网址生成系统。
+Demo地址：http://jumper.xieyangzhe.com/
 ## 算法
 短网址很显然要尽可能短，目前主要是这几种方法
 - 使用自增序列
@@ -15,6 +16,11 @@
 
 ## 预防攻击
 用Google的Guava包中的RateLimiter加Spring AOP对接口实现了一个简单的限流
+
+## 截图
+
+![](screenshots/ss0.png)
+![](screenshots/ss1.png)
 
 ## TODO LIST
 * [ ] 数据挪到Redis上
