@@ -20,8 +20,6 @@ public class AsyncServiceImpl implements AsyncService {
     @Async("asyncExecutor")
     @Override
     public void update(UrlModel urlModel) {
-        System.out.println(Thread.currentThread().getName());
         urlDao.updateWhenClick(urlModel);
-        System.out.println("task finished");
     }
 }

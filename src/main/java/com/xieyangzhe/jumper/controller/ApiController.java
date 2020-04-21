@@ -1,6 +1,7 @@
 package com.xieyangzhe.jumper.controller;
 
 import com.google.gson.Gson;
+import com.xieyangzhe.jumper.annotation.ServiceLimit;
 import com.xieyangzhe.jumper.service.UrlService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,7 @@ public class ApiController {
     private UrlService urlService;
 
     @PostMapping("/create")
+    @ServiceLimit
     public String createUrl(String url, Boolean hasPassword, String password) {
         if (!url.startsWith("http")) {
             url = "http://" + url;

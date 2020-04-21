@@ -58,7 +58,6 @@ public class UrlServiceImpl implements UrlService {
         recentUsed.put(encoded, urlModel);
         urlModel.setViewCount(urlModel.getViewCount() + 1);
         asyncService.update(urlModel);
-        System.out.println("fi");
         return urlModel;
     }
 

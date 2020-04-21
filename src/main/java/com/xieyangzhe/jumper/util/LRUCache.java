@@ -24,15 +24,6 @@ public class LRUCache<K, V> {
         };
     }
 
-    public static void main(String[] args) {
-        LRUCache<String, UrlModel> lruCache = new LRUCache<>(10);
-        UrlModel model = new UrlModel();
-        model.setViewCount(10);
-        lruCache.put("a", model);
-        model.setViewCount(20);
-        System.out.println(lruCache.get("a"));
-    }
-
     public V get(K key) {
         return (V) cache.get(key);
     }
