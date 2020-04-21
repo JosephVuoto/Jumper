@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Language" content="zh-CN">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        @media (min-width: 1200px) {
+            .container {
+                width: 751px;
+            }
+        }
+    </style>
+</head>
+<body style="background-color: MintCream">
+<div class="container">
+    <br>
+    <h1 style="font-size: x-large;" align="center">短网址生成</h1><br>
+    <br>
+    <form id="url-form">
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                    <textarea rows="5" class="form-control" placeholder="输入要生成的URL" id="url"
+                              name="url"></textarea>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-xs-9 col-md-9">
+                <div class="input-group">
+					<span class="input-group-addon">
+                        密码：
+						<input type="checkbox" id="has-password" name="has-password">
+					</span>
+                    <input type="text" class="form-control" placeholder="输入密码" id="password" name="password">
+                </div>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <button type="button" class="btn btn-success btn-block" onclick="form_submit()">生成</button> 
+            </div>
+        </div>
+        <br>
+    </form>
+
+    <div id="result" class="row" hidden="hidden">
+        <div class="alert alert-info col-xs-12 col-md-12" id="short-url">
+        </div>
+    </div>
+</div>
+<script>
+    function form_submit() {
+        var url = $('#url').val();
+        var hasPassword = $('#has-password').is(':checked');
+        var password = $('#password').val();
+
+        if (url === '') {
+            $('#result').removeAttr("hidden");
+            $('#short-url').html("请输入网址！")
+        } else if (hasPassword && password === '') {
+            $('#result').removeAttr("hidden");
+            $('#short-url').html("请输入密码或取消勾选！")
+        } else {
+            $.ajax({
+                type: 'post',
+                url: '/api/create',
+                data: {
+                    url: url,
+                    hasPassword: hasPassword,
+                    password: password
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $('#result').removeAttr("hidden");
+                    $('#short-url').html(data.message)
+                }
+            })
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xieyangzhe.jumper.dao.UrlDao">
+
+    <resultMap id="urlMap" type="UrlModel">
+        <id column="uid" property="uid" jdbcType="INTEGER" />
+        <result column="url" property="url" jdbcType="VARCHAR" />
+        <result column="encoded" property="encoded" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" />
+        <result column="last_view_time" property="lastViewTime" />
+        <result column="view_count" property="viewCount" jdbcType="INTEGER" />
+        <result column="has_password" property="hasPassword" />
+        <result column="password" property="password" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="getUrlMapByEncoded" parameterType="String" resultMap="urlMap">
+        SELECT
+            *
+        FROM
+            url_mapper
+        WHERE
+            encoded = #{encoded}
+        LIMIT 1
+    </select>
+
+    <insert id="insertUrl" parameterType="UrlModel">
+        INSERT INTO `url_mapper` ( `uid`, `url`, `encoded`, `create_time`,
+                                    `last_view_time`, `view_count`, `has_password`,
+                                    `password` )
+        VALUES
+            ( NULL, #{url}, #{encoded}, CURRENT_TIMESTAMP, NULL, '0', #{hasPassword}, #{password} )
+    </insert>
+
+    <select id="selectMax" resultType="String">
+        SELECT
+            MAX( encoded )
+        FROM
+            url_mapper
+    </select>
+
+    <update id="updateWhenClick" parameterType="UrlModel">
+        UPDATE url_mapper
+            SET last_view_time = CURRENT_TIMESTAMP,
+            view_count = #{viewCount}
+        WHERE
+            encoded = #{encoded}
+    </update>
+</mapper>
