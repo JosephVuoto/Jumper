@@ -1,33 +1,24 @@
 # Jumper
-一个简单的短网址生成系统。
-Demo地址：http://jumper.xieyangzhe.com/
-## 算法
-短网址很显然要尽可能短，目前主要是这几种方法
-- 使用自增序列
-这里采用了62进制（0-9，a-z，A-Z），因为62^7 =352161460620862，这么看来7位足够用了。这个算法的原理就是生成一个自增序列，然后转化成62进制再映射成一个字符串。如果是分布式系统也很简单，不同机器错开即可（比如两台机器，一个只生成奇数，另一个只生成偶数），因为不需要满足严格递增。
-- 哈希
-将长网址 md5 生成 32 位签名串,分为 4 段, 每段 8 个字节。对这四段循环处理, 取 8 个字节, 将他看成 16 进制串与 0x3fffffff(30位1) 与操作, 即超过 30 位的忽略处理。这 30 位分成 6 段, 每 5 位的数字作为字母表的索引取得特定字符, 依次进行获得 6 位字符串。总的 md5 串可以获得 4 个 6 位串,取里面的任意一个就可作为这个长 url 的短 url 地址。这样做的优点是最后生成的序列足够随机且位数固定，当然缺点也很明显，虽然概率极小，但哈希总是有可能会碰撞的。
+A simple URL shortening system.
 
-## 一对一还是一对多？
-一对一的好处是保证同一个网址每次输出的短网址都相同，坏处是如果想完美做到要额外做一个映射，非常浪费空间。如果一定追求一对一的话可以用缓存只保存比较常用的长网址，然后用LRU进行淘汰。一对多没什么好说的，简单方便。
+## Algorithm
+To make URLs as short as possible, several methods are used:
+- **Using an auto-increment sequence**  
+  This approach uses base 62 (0-9, a-z, A-Z), which gives 62^7 = 352,161,460,620,862 possible combinations, making 7 characters sufficient. The algorithm generates an auto-increment sequence, converts it to base 62, and maps it to a string. In a distributed system, different machines can generate sequences that don’t overlap (e.g., one machine generates odd numbers, and the other generates even numbers), as strict sequential order is unnecessary.
+  
+- **Hashing**  
+  The long URL is hashed with MD5 to create a 32-character signature string, which is divided into four segments, each containing 8 characters. Each segment is processed by taking 8 characters, treating it as a hexadecimal string, and performing a bitwise AND operation with 0x3fffffff (30 bits). The resulting 30 bits are divided into 6 segments, with each 5-bit number used as an index to a character in the alphabet, resulting in a 6-character string. The MD5 string can generate four such 6-character strings, and any of them can be used as the short URL. The advantage of this method is the randomness and fixed length of the output string, though there is a very small possibility of hash collisions.
 
-## 301还是302？
-返回301永久重定向是符合使用场景的，但是返回302的一个很重要的好处是可以对点击量和IP之类的进行保存和分析。
+## One-to-One or One-to-Many?
+The advantage of one-to-one mapping is that the same URL will always generate the same short URL. The downside is that it requires an additional mapping, which can be space-inefficient. If one-to-one mapping is necessary, you could cache frequently used long URLs and use LRU (Least Recently Used) for eviction. One-to-many mapping is simpler and more convenient.
 
-## 预防攻击
-用Google的Guava包中的RateLimiter加Spring AOP对接口实现了一个简单的限流
+## 301 or 302?
+Returning a 301 (permanent redirect) is more appropriate for this use case, but returning a 302 (temporary redirect) has the added benefit of allowing you to track and analyze click rates and IP addresses.
 
-## 截图
+## Preventing Attacks
+A simple rate-limiting mechanism is implemented using Google’s Guava library's `RateLimiter` and Spring AOP.
 
-![](screenshots/ss0.png)
+## Screenshots
+
+![](screenshots/ss0.png)  
 ![](screenshots/ss1.png)
-
-## TODO LIST
-* [ ] 数据挪到Redis上
-* [ ] 顺便生成个二维码
-* [ ] 显示点击率
-* [ ] 多弄几台机器
-* [x] 基本功能实现
-* [x] 做一下限流
-* [x] 统计点击率
-* [x] 做个缓存，用LRU淘汰
